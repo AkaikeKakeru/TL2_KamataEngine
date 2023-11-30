@@ -1,11 +1,22 @@
 #include "Audio.h"
-#include "AxisIndicator.h"
+//#include "AxisIndicator.h"
 #include "DirectXCommon.h"
 #include "GameScene.h"
-#include "ImGuiManager.h"
+//#include "ImGuiManager.h"
 #include "PrimitiveDrawer.h"
 #include "TextureManager.h"
 #include "WinApp.h"
+//#include "TextureConverter.h"
+//#include <cassert>
+//using namespace DirectX;
+
+//コマンドライン
+enum Argument {
+	kApplicationPath_,	//アプリケーションのパス
+	kFilePath,			//渡されたファイルのパス
+
+	NumArgument_
+};
 
 // Windowsアプリでのエントリーポイント(main関数)
 int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
@@ -14,7 +25,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	// 汎用機能
 	Input* input = nullptr;
 	Audio* audio = nullptr;
-	AxisIndicator* axisIndicator = nullptr;
+	//AxisIndicator* axisIndicator = nullptr;
 	PrimitiveDrawer* primitiveDrawer = nullptr;
 	GameScene* gameScene = nullptr;
 
@@ -28,8 +39,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 #pragma region 汎用機能初期化
 	// ImGuiの初期化
-	ImGuiManager* imguiManager = ImGuiManager::GetInstance();
-	imguiManager->Initialize(win, dxCommon);
+	/*ImGuiManager* imguiManager = ImGuiManager::GetInstance();
+	imguiManager->Initialize(win, dxCommon);*/
 
 	// 入力の初期化
 	input = Input::GetInstance();
@@ -41,7 +52,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 
 	// テクスチャマネージャの初期化
 	TextureManager::GetInstance()->Initialize(dxCommon->GetDevice());
-	TextureManager::Load("white1x1.png");
+	TextureManager::Load("texture.dds");
 
 	// スプライト静的初期化
 	Sprite::StaticInitialize(dxCommon->GetDevice(), WinApp::kWindowWidth, WinApp::kWindowHeight);
@@ -50,8 +61,8 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Model::StaticInitialize();
 
 	// 軸方向表示初期化
-	axisIndicator = AxisIndicator::GetInstance();
-	axisIndicator->Initialize();
+	//axisIndicator = AxisIndicator::GetInstance();
+	//axisIndicator->Initialize();
 
 	primitiveDrawer = PrimitiveDrawer::GetInstance();
 	primitiveDrawer->Initialize();
@@ -69,26 +80,26 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 		}
 
 		// ImGui受付開始
-		imguiManager->Begin();
+		//imguiManager->Begin();
 		// 入力関連の毎フレーム処理
 		input->Update();
 		// ゲームシーンの毎フレーム処理
 		gameScene->Update();
 		// 軸表示の更新
-		axisIndicator->Update();
+	//	axisIndicator->Update();
 		// ImGui受付終了
-		imguiManager->End();
+		//imguiManager->End();
 
 		// 描画開始
 		dxCommon->PreDraw();
 		// ゲームシーンの描画
 		gameScene->Draw();
 		// 軸表示の描画
-		axisIndicator->Draw();
+		//axisIndicator->Draw();
 		// プリミティブ描画のリセット
 		primitiveDrawer->Reset();
 		// ImGui描画
-		imguiManager->Draw();
+		//imguiManager->Draw();
 		// 描画終了
 		dxCommon->PostDraw();
 	}
@@ -99,7 +110,7 @@ int WINAPI WinMain(HINSTANCE, HINSTANCE, LPSTR, int) {
 	Model::StaticFinalize();
 	audio->Finalize();
 	// ImGui解放
-	imguiManager->Finalize();
+	//imguiManager->Finalize();
 
 	// ゲームウィンドウの破棄
 	win->TerminateGameWindow();

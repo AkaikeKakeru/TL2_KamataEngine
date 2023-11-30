@@ -37,6 +37,12 @@ private:
 	/// </summary>
 	void SaveDDSTextureToFile();
 
+public:
+	//ファイル拡張子取得
+	std::wstring GetFileExt() {
+		return fileExt_;
+	}
+
 private:
 	//画像の情報
 	DirectX::TexMetadata metadata_;
