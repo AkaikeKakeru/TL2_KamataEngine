@@ -15,7 +15,7 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 
 	//テクスチャを読み込む
-	textureHandle_ = TextureManager::Load("texture.png");
+	textureHandle_ = TextureManager::Load("texture.dds");
 	//モデル生成
 	model_ = Model::Create();
 

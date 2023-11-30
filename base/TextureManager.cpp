@@ -107,8 +107,49 @@ uint32_t TextureManager::LoadInternal(const std::string& fileName) {
 	TexMetadata metadata{};
 	ScratchImage scratchImg{};
 
-	// WICテクスチャのロード
-	result = LoadFromWICFile(wfilePath, WIC_FLAGS_NONE, &metadata, scratchImg);
+	size_t pos1;
+	std::wstring exceptExt;
+
+	//ワイド文字列に変換した際の文字数
+	int bufferSize =
+		MultiByteToWideChar(
+			CP_ACP, 0, fullPath.c_str(), -1, nullptr, 0
+		);
+
+	//ワイド文字列
+	std::wstring wString;
+	wString.resize(bufferSize);
+
+	//変換する
+	MultiByteToWideChar(
+		CP_ACP, 0, fullPath.c_str(), -1, &wString[0], bufferSize
+	);
+
+	//ファイル拡張子
+	std::wstring fileExt_;
+
+	//区切り文字'.'が出てくる一番最後の部分を検索
+	pos1 = wString.rfind('.');
+	//検索がヒットしたら
+	if (pos1 != std::wstring::npos) {
+		//区切り文字の後ろをファイル拡張子として保存
+		fileExt_ = wString.substr(pos1 + 1, wString.size() - pos1 - 1);
+
+		//区切り文字の前までを抜き出す
+		exceptExt = wString.substr(0, pos1);
+	}
+	else {
+		fileExt_ = L"";
+		exceptExt = wString;
+	}
+
+	//DDSテクスチャのロード
+	result = LoadFromDDSFile(wfilePath, DDS_FLAGS_NONE, &metadata, scratchImg);
+	if (fileExt_ == L"jpg") {
+		 //WICテクスチャのロード
+		result = LoadFromWICFile(wfilePath, WIC_FLAGS_NONE, &metadata, scratchImg);
+	}
+
 	if (FAILED(result)) {
 		auto message = std::format(
 		    L"テクスチャ「{0}」"
@@ -120,18 +161,18 @@ uint32_t TextureManager::LoadInternal(const std::string& fileName) {
 		exit(1);
 	}
 
-	ScratchImage mipChain{};
-	// ミップマップ生成
-	result = GenerateMipMaps(
-	    scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
-	    TEX_FILTER_DEFAULT, 0, mipChain);
-	if (SUCCEEDED(result)) {
-		scratchImg = std::move(mipChain);
-		metadata = scratchImg.GetMetadata();
-	}
+	//ScratchImage mipChain{};
+	//// ミップマップ生成
+	//result = GenerateMipMaps(
+	//    scratchImg.GetImages(), scratchImg.GetImageCount(), scratchImg.GetMetadata(),
+	//    TEX_FILTER_DEFAULT, 0, mipChain);
+	//if (SUCCEEDED(result)) {
+	//	scratchImg = std::move(mipChain);
+	//	metadata = scratchImg.GetMetadata();
+	//}
 
-	// 読み込んだディフューズテクスチャをSRGBとして扱う
-	metadata.format = MakeSRGB(metadata.format);
+	//// 読み込んだディフューズテクスチャをSRGBとして扱う
+	//metadata.format = MakeSRGB(metadata.format);
 
 	// リソース設定
 	CD3DX12_RESOURCE_DESC texresDesc = CD3DX12_RESOURCE_DESC::Tex2D(
