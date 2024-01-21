@@ -10,38 +10,47 @@ public:
 	/// テクスチャをWICからDDSに変換
 	/// </summary>
 	/// <param name="filePath">ファイルパス</param>
-	void ConvertTextureWICToDDS(const std::string& filePath);
+	/// <param name="numOptions">オプション数</param>
+	/// <param name="options">オプション配列</param>
+	void ConvertTextureWICToDDS(
+		const std::string& filePath,
+		int numOptions = 0,
+		char* options[] = nullptr);
+
+	/// <summary>
+	/// 使用方法を出力(表示)する
+	/// </summary>
+	static void OutputUsage();
 
 private:
 	/// <summary>
 	/// テクスチャファイル読込
 	/// </summary>
 	/// <param name="filePath">ファイルパス</param>
-	void LoadWICTextureFromFile(const std::string& filePath);
+	void LoadWICTextureFromFile(
+		const std::string& filePath);
 
 	/// <summary>
 	/// マルチバイト文字列をワイド文字列に変換
 	/// </summary>
 	/// <param name="mString">マルチバイト文字列</param>
 	/// <returns>ワイド文字列</returns>
-	static std::wstring ConvertMultiByteStringToWideString(const std::string& mString);
+	static std::wstring ConvertMultiByteStringToWideString(
+		const std::string& mString);
 
 	/// <summary>
 	/// フォルダパスとファイル名を分解する
 	/// </summary>
 	/// <param name="filePath">ファイルパス</param>
-	void SeparateFilePath(const std::wstring& filePath);
+	void SeparateFilePath(
+		const std::wstring& filePath);
 
 	/// <summary>
 	/// DDSテクスチャとしてファイルを書き出し
 	/// </summary>
-	void SaveDDSTextureToFile();
-
-public:
-	//ファイル拡張子取得
-	std::wstring GetFileExt() {
-		return fileExt_;
-	}
+	void SaveDDSTextureToFile(
+		int numOptions,
+		char* options[]);
 
 private:
 	//画像の情報
