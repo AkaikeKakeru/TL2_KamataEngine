@@ -1,4 +1,4 @@
-﻿#pragma once
+#pragma once
 
 #include "Audio.h"
 #include "DirectXCommon.h"
@@ -48,13 +48,21 @@ private: // メンバ変数
 	/// ゲームシーン用
 	/// </summary>
 	
-	//テクスチャハンドル
-	uint32_t textureHandle_ = 0;
-	//3Dモデル
-	Model* model_ = nullptr;
+	//テクスチャ赤
+	uint32_t texAngry_ = 0;
+	//テクスチャ黄
+	uint32_t texSmile_ = 0;
 
-	//ワールド変換
-	WorldTransform worldTransform_;
+	//3Dモデル赤
+	Model* modelAngry_ = nullptr;
+	//3Dモデル黄
+	Model* modelSmile_ = nullptr;
+
+	//ワールド変換赤
+	WorldTransform worldTransformAngry_;
+	//ワールド変換黄
+	WorldTransform worldTransformSmile_;
+
 	//ビュープロジェクション
 	ViewProjection viewProjection_;
 };

@@ -5,7 +5,8 @@
 GameScene::GameScene() {}
 
 GameScene::~GameScene() {
-	delete model_;
+	delete modelAngry_;
+	delete modelSmile_;
 }
 
 void GameScene::Initialize() {
@@ -15,17 +16,30 @@ void GameScene::Initialize() {
 	audio_ = Audio::GetInstance();
 
 	//テクスチャを読み込む
-	textureHandle_ = TextureManager::Load("texture.dds");
+	texAngry_ = TextureManager::Load("angry.dds");
+	texSmile_ = TextureManager::Load("smile.dds");
 	//モデル生成
-	model_ = Model::Create();
+	modelAngry_ = Model::Create();
+	
+	modelSmile_ = Model::Create();
 
 	//ワールド変換初期化
-	worldTransform_.Initialize();
+	worldTransformAngry_.Initialize();
+	worldTransformAngry_.matWorld_.m[3][0] += 10.0f;
+
+	worldTransformSmile_.Initialize();
+	worldTransformSmile_.matWorld_.m[3][0] -= 10.0f;
+
+	worldTransformAngry_.TransferMatrix();
+	worldTransformSmile_.TransferMatrix();
+
 	//ビュープロジェクション初期化
 	viewProjection_.Initialize();
 }
 
-void GameScene::Update() {}
+void GameScene::Update() {
+
+}
 
 void GameScene::Draw() {
 
@@ -55,7 +69,8 @@ void GameScene::Draw() {
 	/// </summary>
 
 	//3Dモデル描画
-	model_->Draw(worldTransform_, viewProjection_, textureHandle_);
+	modelAngry_->Draw(worldTransformAngry_, viewProjection_, texAngry_);
+	modelSmile_->Draw(worldTransformSmile_, viewProjection_, texSmile_);
 
 	// 3Dオブジェクト描画後処理
 	Model::PostDraw();
